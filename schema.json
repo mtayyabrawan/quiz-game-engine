@@ -1,0 +1,84 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "qa": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string"
+                    },
+                    "answer": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "question",
+                    "answer"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "mcq": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string"
+                    },
+                    "answer": {
+                        "type": "string"
+                    },
+                    "choices": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 4
+                    }
+                },
+                "required": [
+                    "question",
+                    "answer",
+                    "choices"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "tfq": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string"
+                    },
+                    "answer": {
+                        "type": "string",
+                        "enum": [
+                            "True",
+                            "False"
+                        ]
+                    }
+                },
+                "required": [
+                    "question",
+                    "answer"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "qa",
+        "mcq",
+        "tfq"
+    ],
+    "additionalProperties": false
+}
