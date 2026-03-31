@@ -1,5 +1,34 @@
+from genericpath import exists
 from src.load import LoadedQuestions, load_questions
 from src.questions import MCQQuestion, Question, TrueFalseQuestion
+
+
+class Student:
+    def __init__(self, name: str, roll_no: str) -> None:
+        self.name = name
+        self.roll_no = roll_no
+
+    def gen_result(
+        self,
+        total_marks: int,
+        marks: int,
+        total_questions: int,
+        correct_count: int,
+        wrong_count: int,
+    ):
+        if exists("result.csv"):
+            with open("result.csv", "a") as result_file:
+                result_file.write(
+                    f"{self.roll_no},{self.name},{marks}/{total_marks},{total_questions},{correct_count},   {wrong_count}\n"
+                )
+        else:
+            with open("result.csv", "w") as result_file:
+                result_file.write(
+                    "Roll No,Name,Marks,Total Questions,Correct Answers,Wrong Answers\n"
+                )
+                result_file.write(
+                    f"{self.roll_no},{self.name},{marks}/{total_marks},{total_questions},{correct_count},   {wrong_count}\n"
+                )
 
 
 def generate_questions(questions: LoadedQuestions):
@@ -23,6 +52,7 @@ def main():
     if all_questions == None:
         print("Sorry! No questions found.")
     else:
+        student = init_student()
         generated_questions = generate_questions(all_questions)
         print(f"You have {Question.seconds} seconds to answer for each question")
         marks = 0
@@ -43,11 +73,25 @@ def main():
             + len(generated_questions["all_mcq"])
             + len(generated_questions["all_tfq"])
         )
+        total_marks = int(total_questions * 5)
         correct_count = int(marks / 5)
-        print(f"\nYou scored {marks} out of {int(total_questions*5)} marks")
+        wrong_count = total_questions - correct_count
+        print(f"\nYou scored {marks} out of {total_marks} marks")
         print(
-            f"Total Questions: {total_questions}\nCorrect Answers: {correct_count}\nWrong Answers: {total_questions-correct_count}"
+            f"Total Questions: {total_questions}\nCorrect Answers: {correct_count}\nWrong Answers: {wrong_count}"
         )
+        student.gen_result(
+            total_marks, marks, total_questions, correct_count, wrong_count
+        )
+
+
+def init_student():
+    name = input("Dear student! Enter your name: ")
+    roll_no = input("Enter your Roll No: ")
+
+    if (len(name) == 0 and not name.isalpha()) or (len(roll_no) == 0):
+        raise Exception("Please Enter valid Name or Roll No")
+    return Student(name, roll_no)
 
 
 if __name__ == "__main__":
